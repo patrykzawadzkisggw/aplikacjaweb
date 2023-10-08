@@ -1,0 +1,41 @@
+.card {
+    border-radius: 2rem ;
+    overflow: hidden;
+    box-shadow: 1px 1px 5px  rgba(160, 160, 160, 0.215);
+    .details {
+        padding: 1rem;
+        display: flow-root;
+        .title {
+            text-wrap: wrap;
+            height: 5ch;
+        }
+    }
+    img {
+        width: 100%;
+        aspect-ratio: 1/1;
+    }
+    &:hover {
+        cursor: pointer;
+        .details {
+            background-color: darken($color: white, $amount: 5%);
+        }
+    }
+    .basket {
+        background: url('../img/basket.svg');
+        background-size: 40%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: var(--accent);
+
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        float: right;
+        &:hover {
+            cursor: pointer;
+            background-color: darken($color: #1D90F5, $amount: 5%);
+        }
+    }
+}
+
+
