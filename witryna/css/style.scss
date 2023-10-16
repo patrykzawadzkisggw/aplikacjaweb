@@ -1,0 +1,129 @@
+@import 'components/colors';
+@import 'components/buttons';
+@import 'components/banner';
+@import 'components/card';
+@import 'footer';
+@import 'description';
+@import 'orders';
+@import 'components/itemlist';
+@import 'components/table';
+@import 'components/filter';
+@import 'nav';
+
+
+
+
+*, *::after, *::before {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: poppins;
+}
+
+main {
+    padding: 2rem;
+}
+
+
+
+.gridfrm {
+    display: grid;
+    gap: 1rem;
+}
+
+
+
+
+
+
+a {
+    color: #1D90F5;
+    text-decoration: none;
+}
+
+h2 {
+    padding: 1rem 0;
+    font-size: 2rem;
+}
+
+.capital {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #9FAAB9;
+}
+
+.message {
+    padding-bottom: 2rem;
+}
+
+
+
+form {
+    max-width: 450px;
+}
+
+@media(min-width:540px) {
+    .gridfrm {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .span {
+        grid-column: 1 /span 2;
+    }
+    
+
+    .btn {
+        grid-column: 2 / span 1;
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    gap: 1rem;
+}
+
+
+
+section {
+    margin: 4rem 0;
+}
+
+
+.grid2 {
+    margin-bottom: 2.5rem;
+}
+
+section h2 {
+    margin-bottom: 1.5rem;
+}
+
+.foot {
+    max-width: 1000px;
+  width: calc(100% - 1rem);
+  margin: 0 auto;
+}
+
+
+
+
+a {
+   
+    .order {
+        width: 100% !important;
+    }
+}
+
+.black {
+    background-color: #1F1D2C;
+    h2 {
+        color: white;
+    }
+}
+.fixed {
+    position:sticky;
+    z-index: 999;
+}
