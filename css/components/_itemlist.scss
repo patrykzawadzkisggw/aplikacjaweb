@@ -1,0 +1,11 @@
+.itemslist {
+    .grid2 {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        .input {
+            flex-grow: 1;
+        }
+    }
+}
+
