@@ -6,7 +6,7 @@ const plik = Frm.querySelector("#plik")
 const password = Frm.querySelector("#password")
 const submit1 = Frm.querySelector("#submit1")
 Frm.addEventListener("change", e=> {
-    if(this.plik.files.length>=1) Frm.submit()
+    //if(this.plik.files.length>=1) Frm.submit()
 })
 function validate(obj, regex,comment) {
     const nameVal = obj.value
@@ -24,8 +24,8 @@ function validate(obj, regex,comment) {
 }
 Frm.addEventListener("submit", e =>{
     e.preventDefault()
-    if(this.plik.files.length>=1) Frm.submit()
-    console.log('click')
+    //if(this.plik.files.length>=1) Frm.submit()
+    //console.log('click')
     name.value= name.value.trim()
     const v1 =validate(name,/^[^\d\W]{3,}$/i,"Musisz podać imie")
     surrname.value= surrname.value.trim()

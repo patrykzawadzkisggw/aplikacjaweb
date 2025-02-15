@@ -21,7 +21,7 @@ class Description {
     }
 
     async loadData() {
-        const serverData = await fetch(`http://localhost/witryna/api.php/pudelko/${this.id}`)
+        const serverData = await fetch(`/api.php/pudelko/${this.id}`)
         const jsonData = await serverData.json()
 
         if(jsonData.length==0) {

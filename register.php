@@ -164,7 +164,7 @@ if(isset($_SESSION['NumerKlienta']) ) {
                 <span class="errorTxt"><?php printError("password_blad");?></span>
             </div>
 
-             <input type="file" name="plik_xml" accept=".xml" id="plik">
+             <input type="hidden" name="plik_xml" accept=".xml" id="plik">
              <input type="submit" value="Utwórz" class="btn" id="submit1">
 
            </div>

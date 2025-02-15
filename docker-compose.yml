@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: phpapp
+    ports:
+      - "80:80"
+    depends_on:
+      - database
+    env_file:
+      - .env
+    networks:
+      - network
+
+  database:
+    image: mariadb:latest
+    container_name: database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - database_dataa:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+
+
+volumes:
+  database_dataa:
