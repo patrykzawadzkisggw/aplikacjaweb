@@ -14,7 +14,7 @@ services:
       - network
 
   database:
-    image: mariadb:latest
+    image: mariadb@sha256:310d29fbb58169dcddb384b0ff138edb081e2773d6e2eceb976b3668089f2f84
     container_name: database
     restart: always
     environment:
@@ -25,7 +25,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - database_dataa:/var/lib/mysql
+      - database_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - network
@@ -36,4 +36,4 @@ networks:
 
 
 volumes:
-  database_dataa:
+  database_data:
