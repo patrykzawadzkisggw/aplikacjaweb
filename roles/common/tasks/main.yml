@@ -1,0 +1,32 @@
+---
+# tasks file for roles/common
+
+#- name: "Update apt cache and upgrade packages"
+#  ansible.builtin.apt:
+#    name: "*"
+#    state: "latest"
+#    update_cache: true
+#  tags:
+#    - "skip_ansible_lint"
+
+- name: "Install common packages"
+  ansible.builtin.apt:
+    state: "present"
+    pkg: "{{ common_packages }}"
+
+
+- name: "Add group for our users"
+  ansible.builtin.group:
+    name: "{{ item.group }}"
+    state: "{{ item.state }}"
+  with_items: "{{ users }}"
+
+- name: "Add users to our group"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    group: "{{ item.group }}"
+    comment: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ users }}"
+
+

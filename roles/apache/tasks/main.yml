@@ -1,0 +1,65 @@
+---
+# tasks file for roles/apache
+
+- name: "Install apache packages"
+  ansible.builtin.apt:
+    state: "present"
+    pkg: "{{ apache_packages }}"
+
+- name: "Add user to apache group"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: "{{ apache_group }}"
+    append: true
+  with_items: "{{ users }}"
+
+- name: "Remove all files in the document root"
+  file:
+    path: "/var/www/html/*"
+    state: absent
+  become: yes
+
+- name: "Copy app files to the document root"
+  copy:
+    src: "../../app/"
+    dest: "/var/www/html/"
+    owner: root
+    group: root
+    mode: "0644"
+  become: yes
+
+- name: "Compile style.scss to style.css"
+  command: sass /var/www/html/css/style.scss:/var/www/html/css/style.css
+
+- name: "Remove SCSS files after compilation"
+  file:
+    path: "/var/www/html/css/{{ item }}"
+    state: absent
+    force: yes
+  become: yes
+  with_items:
+    - style.scss
+    - _orders.scss
+    - _nav.scss
+    - _footer.scss
+    - _description.scss
+    - style.css.map
+    - components
+
+- name: "Change ownership and permissions"
+  file:
+    path: "/var/www/html/"
+    state: directory
+    recurse: yes
+    owner: "{{ users.0.name }}"
+    group: "{{ apache_group }}"
+    mode: "0755"
+
+
+- name: "Create apache2.conf file"
+  template:
+    src: apache2.conf.j2   
+    dest: /etc/apache2/apache2.conf
+    force: yes
+  become: yes
+  notify: "Restart apache2"

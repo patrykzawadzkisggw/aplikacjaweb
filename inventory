@@ -1,0 +1,6 @@
+[ubuntu]
+ServerUbuntu
+
+[ubuntu:vars]
+ansible_user=patryk
+ansible_become_method=sudo

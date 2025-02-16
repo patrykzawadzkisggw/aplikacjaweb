@@ -10,8 +10,7 @@ COPY . .
 RUN sass css/style.scss css/style.css
 RUN rm /build/css/*.scss \
     && rm /build/css/style.css.map \
-    && rm -rf /build/css/components \
-    && rm /build/init.sql
+    && rm -rf /build/css/components
 
 FROM php:apache@sha256:9bc5606262464d270e8f22bcfe93058547d26589a02c991bbe50de99edde8878
 

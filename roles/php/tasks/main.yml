@@ -1,0 +1,10 @@
+---
+# tasks file for roles/php
+
+- name: "Install php packages"
+  ansible.builtin.apt:
+    state: "present"
+    pkg: "{{ php_packages }}"
+  notify: "Restart apache2"
+
+

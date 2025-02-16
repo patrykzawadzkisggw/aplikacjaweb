@@ -1,0 +1,9 @@
+---
+# defaults file for roles/common
+
+common_packages:
+  - git
+  - unzip
+
+users:
+  - { name: apacheAdmin, group: apacheAdmin, state: present}
