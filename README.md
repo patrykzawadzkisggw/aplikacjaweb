@@ -8,10 +8,10 @@ This application allows users to:
 - Generate an XML file with order data  
 
 ![image](img/z0.png)
-![image](img/z1.png)
-![image](img/z2.png)
-![image](img/z3.png)
-![image](img/z4.png)
+![image](img/z1.jpeg)
+![image](img/z2.jpeg)
+![image](img/z3.jpeg)
+![image](img/z4.jpeg)
 
 ## Deployment  
 
