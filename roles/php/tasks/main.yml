@@ -1,10 +1,47 @@
 ---
 # tasks file for roles/php
 
+- name: "Include the operating system specific variables"
+  ansible.builtin.include_vars: "{{ ansible_os_family }}.yml"
+
 - name: "Install php packages"
-  ansible.builtin.apt:
+  ansible.builtin.package:
     state: "present"
-    pkg: "{{ php_packages }}"
+    name: "{{ php_packages }}"
   notify: "Restart apache2"
+
+- name: "Set the selinux allowing httpd_t to be permissive is required"
+  community.general.selinux_permissive:
+    name: httpd_t
+    permissive: true
+  when: selinux.http_permissive and ansible_os_family == 'RedHat'
+
+- name: "Check to see if the ~/firewall-configured file exists"
+  ansible.builtin.stat:
+    path: "~/firewall-configured"
+  register: firewall_configured
+
+- name: "Check if firewalld is running"
+  ansible.builtin.command: firewall-cmd --state
+  register: fireweall_status
+  when: ansible_os_family == 'RedHat'
+
+- name: "Set a fact so the playbook can continue if running on a Debian based system"
+  ansible.builtin.set_fact:
+    fireweall_status:
+      stdout: notrunning
+  when: ansible_os_family == 'Debian'
+
+- name: "Run the firewall-cmd commands if the firewall-cmd --state command returns running"
+  ansible.builtin.command: "{{ item }}"
+  with_items: "{{ firewall_comands }}"
+  when: fireweall_status.stdout == "running" and ansible_os_family == 'RedHat' and not firewall_configured.stat.exists
+
+- name: "Create the ~/firewall-configured file"
+  ansible.builtin.file:
+    path: ~/firewall-configured
+    state: touch
+    mode: "0644"
+  when: not firewall_configured.stat.exists
 
 

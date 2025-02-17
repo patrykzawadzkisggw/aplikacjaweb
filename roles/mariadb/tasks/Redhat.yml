@@ -1,0 +1,82 @@
+- name: "Install MariaDB packages"
+  ansible.builtin.package:
+    name: "{{ mariadb_packages }}"
+    state: present
+
+- name: "Start MariaDB"
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name: "Check if /root/.my.cnf exists"
+  ansible.builtin.stat:
+    path: /root/.my.cnf
+  register: mycnf
+
+- name: "Change MySQL root password if needed"
+  community.mysql.mysql_user:
+    name: "{{ mariadb_root_username }}"
+    host: "{{ item }}"
+    password: "{{ mariadb_root_password }}"
+    check_implicit_admin: yes
+    priv: "*.*:ALL,GRANT"
+    login_user: root
+    login_unix_socket: /var/lib/mysql/mysql.sock
+  with_items: "{{ mariadb_hosts }}"
+  when: not mycnf.stat.exists
+
+- name: "Set up /root/.my.cnf file"
+  ansible.builtin.template:
+    src: "my.cnf.j2"
+    dest: "/root/.my.cnf"
+    mode: "0600"
+
+- name: "Delete anonymous MySQL user"
+  community.mysql.mysql_user:
+    user: ""
+    host: "{{ item }}"
+    state: absent
+  with_items: "{{ mariadb_hosts }}"
+
+- name: "Remove the MySQL test database"
+  community.mysql.mysql_db:
+    db: test
+    state: absent
+
+- name: "Copy init.sql to /tmp"
+  ansible.builtin.copy:
+    src: "../../init.sql"
+    dest: "/tmp/init.sql"
+  when: mariadb_sample_database.create_database
+
+- name: "Create the sample database"
+  community.mysql.mysql_db:
+    db: "{{ mariadb_sample_database.db_name }}"
+    state: present
+    encoding: 'utf8'
+    collation: 'utf8_polish_ci'
+  when: mariadb_sample_database.create_database
+
+- name: "Create the user for the sample database"
+  community.mysql.mysql_user:
+    name: "{{ mariadb_sample_database.db_user }}"
+    password: "{{ mariadb_sample_database.db_password }}"
+    priv: "{{ mariadb_sample_database.db_name }}.*:ALL"
+    host: "%"
+    state: present
+  when: mariadb_sample_database.create_database
+
+- name: "Check if tables exist in database"
+  community.mysql.mysql_query:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    query: "SHOW TABLES FROM {{ mariadb_sample_database.db_name }}"
+  register: tables_check
+  when: mariadb_sample_database.create_database
+
+- name: "Import the sample database"
+  ansible.builtin.shell:
+    cmd: "mysql -u root --password={{ mariadb_root_password }} {{ mariadb_sample_database.db_name }} < {{ mariadb_sample_database.path }}/{{ item }}"
+  with_items: "{{ mariadb_sample_database.dump_files }}"
+  when: tables_check.query_result[0] | length == 0

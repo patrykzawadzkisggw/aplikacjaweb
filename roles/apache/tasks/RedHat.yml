@@ -1,0 +1,75 @@
+- name: "Install apache packages"
+  ansible.builtin.package:
+    name: "{{ apache_packages }}"
+    state: present
+  become: yes
+
+- name: "Add user to apache group"
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: "{{ apache_group }}"
+    append: yes
+  with_items: "{{ users }}"
+
+- name: "Remove all files in the document root"
+  file:
+    path: "/var/www/html/"
+    state: absent
+  become: yes
+
+- name: "Copy app files to the document root"
+  copy:
+    src: "../../app/"
+    dest: "/var/www/html/"
+    owner: root
+    group: root
+    mode: "0644"
+  become: yes
+
+- name: Install sass using npm
+  ansible.builtin.command:
+    cmd: npm install -g sass
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH }}"
+
+- name: "Compile style.scss to style.css"
+  command: /usr/local/bin/sass /var/www/html/css/style.scss:/var/www/html/css/style.css --no-source-map
+  become: yes
+
+- name: "Remove SCSS files after compilation"
+  file:
+    path: "/var/www/html/css/{{ item }}"
+    state: absent
+    force: yes
+  become: yes
+  with_items:
+    - style.scss
+    - _orders.scss
+    - _nav.scss
+    - _footer.scss
+    - _description.scss
+    - components
+
+- name: "Change ownership and permissions"
+  file:
+    path: "/var/www/html/"
+    state: directory
+    recurse: yes
+    owner: "{{ users.0.name }}"
+    group: "{{ apache_group }}"
+    mode: "0755"
+
+- name: "Create httpd.conf file"
+  template:
+    src: httpd.conf.j2   
+    dest: /etc/httpd/conf/httpd.conf
+    force: yes
+  become: yes
+  notify: "Restart apache2"
+
+- name: "Enable and start Apache"
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: yes
+  become: yes

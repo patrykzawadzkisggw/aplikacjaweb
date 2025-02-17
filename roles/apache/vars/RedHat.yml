@@ -1,0 +1,7 @@
+apache_group: apache
+apache_packages:
+  - httpd
+  - mod_ssl
+  - ca-certificates
+  - openssl
+  - nodejs

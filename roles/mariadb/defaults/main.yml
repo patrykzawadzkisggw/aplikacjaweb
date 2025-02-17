@@ -1,10 +1,7 @@
 ---
 # defaults file for roles/mariadb
 
-mariadb_packages:
-  - mariadb-server
-  - mariadb-client
-  - python3-pymysql
+
 
 
 mariadb_hosts:

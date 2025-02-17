@@ -1,14 +1,7 @@
 ---
 # defaults file for roles/apache
 
-apache_packages:
-  - apache2
-  - apache2-ssl-dev
-  - ca-certificates
-  - openssl
-  - sass
 
-apache_group: www-data
 web_root: web
 
 

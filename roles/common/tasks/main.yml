@@ -1,18 +1,18 @@
 ---
 # tasks file for roles/common
 
-#- name: "Update apt cache and upgrade packages"
-#  ansible.builtin.apt:
-#    name: "*"
-#    state: "latest"
-#    update_cache: true
-#  tags:
-#    - "skip_ansible_lint"
+- name: "Update package cache"
+  ansible.builtin.command: "{{ 'apt update' if ansible_os_family == 'Debian' else 'dnf makecache' }}"
+  changed_when: false
+
+- name: "Set Apache service name"
+  set_fact:
+    apache_service: "{{ 'apache2' if ansible_os_family == 'Debian' else 'httpd' }}"
 
 - name: "Install common packages"
-  ansible.builtin.apt:
+  ansible.builtin.package:
     state: "present"
-    pkg: "{{ common_packages }}"
+    name: "{{ common_packages }}"
 
 
 - name: "Add group for our users"

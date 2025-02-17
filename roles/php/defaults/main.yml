@@ -1,16 +1,9 @@
 ---
 # defaults file for roles/php
 
-php_packages:
-  - php
-  - php-cli
-  - php-curl
-  - php-gd
-  - php-intl
-  - php-mbstring
-  - php-mysql
-  - php-soap
-  - php-xml
-  - php-xmlrpc
-  - php-zip
-  - libapache2-mod-php
+selinux:
+  http_permissive: true
+
+firewall_comands:
+  - "firewall-cmd --zone=public --add-port=80/tcp --permanent"
+  - "firewall-cmd --zone=public --add-port=80/tcp"

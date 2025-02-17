@@ -1,0 +1,13 @@
+php_packages:
+  - php
+  - php-cli
+  - php-common
+  - php-curl
+  - php-gd
+  - php-intl
+  - php-mbstring
+  - php-mysqlnd
+  - php-soap
+  - php-xml
+  - php-pecl-zip
+  - php-fpm
